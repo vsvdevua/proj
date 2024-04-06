@@ -3,6 +3,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
 import { AdditionalComponent } from './additional/additional.component';
 import { CalculationsService } from './calculations.service';
+import { MockCalculation } from './mocks/mockcalculation';
 
 describe('AppComponent', () => {
   beforeEach(async () => {
@@ -12,6 +13,9 @@ describe('AppComponent', () => {
       ],
       declarations: [
         AppComponent, AdditionalComponent
+      ],
+      providers: [
+        {provide: 'ICalculation', useExisting: CalculationsService}
       ],
     }).compileComponents();
   });
@@ -52,7 +56,7 @@ describe('AppComponent', () => {
   });
 
 
-  it('number of calculations using fixture injector' , () => {
+  fit('number of calculations using fixture injector' , () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
     const calcServ = fixture.debugElement.injector.get(CalculationsService);
@@ -62,8 +66,8 @@ describe('AppComponent', () => {
     expect(app.numberOfCalculations).toEqual(startValue + 1);
   });
 
-  fit('number of calculations using manually injected service' , () => {
-    const calcServ = new CalculationsService();
+  it('number of calculations using manually injected service' , () => {
+    const calcServ = new MockCalculation();
     const component = new AppComponent(calcServ);
     component.ngOnInit();
     const startValue = component.numberOfCalculations;

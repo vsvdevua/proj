@@ -1,9 +1,20 @@
 import { EventEmitter, Injectable } from '@angular/core';
 
+export interface ICalculation {
+
+  calculatedEvent :EventEmitter<Number>;
+
+  getFactorial(n: number):number;
+
+  getFibonacci(n: number):number;
+
+}
+
+
 @Injectable({
   providedIn: 'root'
 })
-export class CalculationsService {
+export class CalculationsService implements ICalculation {
 
 
  calculatedEvent = new EventEmitter<Number>();  

@@ -1,5 +1,5 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { CalculationsService } from './calculations.service';
+import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
+import { ICalculation } from './calculations.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -17,7 +17,7 @@ export class AppComponent implements OnInit, OnDestroy {
   numberOfCalculations = 0;
   subscription: Subscription = new Subscription;
 
-  constructor(private calcServ: CalculationsService) {}
+  constructor(@Inject ('ICalculation') private calcServ: ICalculation) {}
   
   ngOnInit(): void {
     this.subscription=this.calcServ.calculatedEvent.subscribe(()=> this.numberOfCalculations++);
