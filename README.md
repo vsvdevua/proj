@@ -25,3 +25,64 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+
+
+## Tour ui
+
+### install
+
+npm install ngx-ui-tour-core @angular/cdk @angular/animations
+
+
+### src/app/app.module.ts add:
+
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { OverlayModule } from '@angular/cdk/overlay';
+import { TourModule } from 'ngx-ui-tour-core';
+
+ imports: [
+   ..
+    BrowserAnimationsModule,
+    OverlayModule,
+    TourModule.forRoot(), // Initialize the TourModule
+    ...
+  ],
+
+
+  ### src/app/app.component.ts add:
+import { TourService } from 'ngx-ui-tour-core';
+
+constructor(private tourService: TourService) {
+    this.tourService.initialize([{
+      anchorId: 'start.tour',
+      content: 'Welcome to the tour!',
+      title: 'Welcome',
+    }]);
+  }
+
+  startTour(): void {
+    this.tourService.start();
+  }
+
+### src/app/app.component.html add:
+
+<button (click)="startTour()">Start Tour</button>
+
+<div id="start.tour" style="margin-top: 50px;">
+  <!-- Your content here -->
+</div>
+
+
+### src/styles.css
+
+.ui-tour-step {
+  background-color: rgba(0, 0, 0, 0.9);
+  color: #fff;
+  border-radius: 4px;
+  padding: 15px;
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5);
+}
+
+.ui-tour-step__arrow {
+  border-color: rgba(0, 0, 0, 0.9);
+}
