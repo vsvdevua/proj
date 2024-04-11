@@ -6,7 +6,10 @@ import { CalculationsService } from './calculations.service';
 
 describe('AppComponent', () => {
   let calcServ: CalculationsService;
-  const fakeServ = jasmine.createSpyObj('CalculationsService', ['getFactorial', 'getFibonacci']); 
+  const fakeServ = {
+    getFactorial: jasmine.createSpy('getFactorial'),
+    getFibonacci: jasmine.createSpy('getFibonacci')
+  } 
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -55,7 +58,7 @@ describe('AppComponent', () => {
     expect(compiled.querySelector('h5')?.textContent).toContain('additional works!');
   });
 
-  it('number of calculations using fixture injector', () => {
+ it('number of calculations using fixture injector', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
     const calcServ = fixture.debugElement.injector.get(CalculationsService);
@@ -72,5 +75,43 @@ describe('AppComponent', () => {
     fixture.detectChanges();
     app.factorial('3');
     expect(app.numberOfCalculations).toEqual(startValue + 1);
+  });
+
+  it('test factorial using spyOn callFake and callThrough', () => {
+    const fixture = TestBed.createComponent(AppComponent);
+    const app = fixture.componentInstance;
+
+    // call original method
+    spyOn(app, 'getCalculations').and.callThrough();
+    expect(app.getCalculations()).toEqual(app.numberOfCalculations);
+    
+    // call fake which we defined
+    spyOn(app, 'factorial').and.callFake(()=> app.factNum=10);
+    app.factorial('1');
+    expect(app.factNum).toEqual(10);
+    
+   
+  });
+
+  it('test factorial using spyOn returnValue and spy calls', () => {
+    const fixture = TestBed.createComponent(AppComponent);
+    const app = fixture.componentInstance;
+
+        
+    // returns our value
+    spyOn(app, 'getCalculations').and.returnValue(10);
+    expect(app.getCalculations()).toEqual(10);
+
+     // spy on service method
+     calcServ.getFactorial(1);
+     calcServ.getFactorial(1);
+     fakeServ.getFactorial.calls.reset();
+     calcServ.getFactorial(1);
+     expect(fakeServ.getFactorial).toHaveBeenCalledTimes(1);
+
+
+     // spy on properties
+     spyOnProperty(app, "fib", "get").and.returnValue(100);
+     expect(app.fib).toEqual(100);
   });
 });

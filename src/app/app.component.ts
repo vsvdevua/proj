@@ -43,4 +43,12 @@ export class AppComponent {
       console.error("Error calculating fibonacci:", error);
     }
   }
+
+  getCalculations():number{
+    return this.numberOfCalculations;
+  }
+
+  get fib():number{
+    return this.fibNum;
+  }
 }
