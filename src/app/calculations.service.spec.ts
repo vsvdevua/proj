@@ -29,9 +29,4 @@ describe('CalculationsService', () => {
   });
 
 
-  it('check that event emmitter works', () => {
-   spyOn(service.calculatedEvent, 'emit');
-   service.getFibonacci(10);
-   expect(service.calculatedEvent.emit).toHaveBeenCalledOnceWith(1);
-  });
 });

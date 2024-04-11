@@ -5,15 +5,13 @@ import { EventEmitter, Injectable } from '@angular/core';
 })
 export class CalculationsService {
 
-
- calculatedEvent = new EventEmitter<Number>();  
+ 
   constructor() { }
 
 
 
   getFactorial(n: number): number {
     console.log(n);
-    this.calculatedEvent.emit(1);
     return this.getFact(n);
     }
 
@@ -27,7 +25,6 @@ export class CalculationsService {
 }
 
 getFibonacci(n: number): number {
-  this.calculatedEvent.emit(1);
   let a = 0;
   let b = 1;
   let temp = 0;
