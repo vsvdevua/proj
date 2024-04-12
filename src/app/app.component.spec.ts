@@ -6,7 +6,8 @@ import { CalculationsService } from './calculations.service';
 
 describe('AppComponent', () => {
   let calcServ: CalculationsService;
-  const fakeServ = jasmine.createSpyObj('CalculationsService', ['getFactorial', 'getFibonacci']); 
+  const fakeServ = jasmine.createSpyObj('fakeServ', ['getFactorial', 'getFibonacci']); 
+  Object.defineProperty(fakeServ, "name", {get:()=>{}, set:()=>{}, configurable: true })
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -61,9 +62,12 @@ describe('AppComponent', () => {
     const calcServ = fixture.debugElement.injector.get(CalculationsService);
     expect(calcServ.getFactorial(1)).toEqual(1);
     expect(calcServ.getFibonacci(1)).toEqual(1);
+    spyOnProperty(fakeServ, "name", "get").and.returnValue("VSVDev");
+    expect(fakeServ.name).toEqual("VSVDev");
   });
 
-  xit('factorial', () => {
+ 
+  it('factorial', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
     const calcServ = fixture.debugElement.injector.get(CalculationsService);
