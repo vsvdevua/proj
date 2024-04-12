@@ -1,19 +1,34 @@
+
 import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
 import { AdditionalComponent } from './additional/additional.component';
 import { CalculationsService } from './calculations.service';
+import { EventEmitter } from '@angular/core';
 
 describe('AppComponent', () => {
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule
-      ],
-      declarations: [
-        AppComponent, AdditionalComponent
-      ],
+  let calcServ: CalculationsService;
+  const fakeServ = jasmine.createSpyObj('fakeServ', ['getFactorial', 'getFibonacci'], { calculatedEvent: new EventEmitter() });
+
+ 
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [RouterTestingModule],
+      declarations: [AppComponent, AdditionalComponent],
+      providers: [{ provide: CalculationsService, useValue: fakeServ }]
     }).compileComponents();
+
+    calcServ = TestBed.inject(CalculationsService);
+
+    fakeServ.getFactorial.and.callFake(() => {
+      fakeServ.calculatedEvent.emit(1);
+      return 1; 
+    });
+    fakeServ.getFibonacci.and.callFake(() => {
+      fakeServ.calculatedEvent.emit(1);
+      return 1; 
+    });
+   
   });
 
   it('should create the app', () => {
@@ -52,23 +67,22 @@ describe('AppComponent', () => {
   });
 
 
-  it('number of calculations using fixture injector' , () => {
+  fit('number of calculations using fixture injector', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    const calcServ = fixture.debugElement.injector.get(CalculationsService);
+
     const startValue = app.numberOfCalculations;
-    fixture.detectChanges(); 
-    calcServ.getFactorial(3);
+    expect(calcServ.getFactorial(1)).toEqual(1);
+    expect(calcServ.getFibonacci(1)).toEqual(1);
+    fixture.detectChanges();
+    console.log('before call: ' + app.numberOfCalculations);
+    calcServ.getFactorial(1);
+    console.log('after call: ' + app.numberOfCalculations);
     expect(app.numberOfCalculations).toEqual(startValue + 1);
+    calcServ.getFactorial(1);
+    console.log('after second call: ' + app.numberOfCalculations);
+    expect(app.numberOfCalculations).toEqual(startValue + 2);
   });
 
-  fit('number of calculations using manually injected service' , () => {
-    const calcServ = new CalculationsService();
-    const component = new AppComponent(calcServ);
-    component.ngOnInit();
-    const startValue = component.numberOfCalculations;
-    calcServ.getFactorial(3);
-    expect(component.numberOfCalculations).toEqual(startValue + 1);
-  });
 
 });
