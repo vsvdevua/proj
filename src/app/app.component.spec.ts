@@ -66,16 +66,6 @@ describe('AppComponent', () => {
     expect(calcServ.getFibonacci(1)).toEqual(1);
   });
 
-  xit('factorial', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    const calcServ = fixture.debugElement.injector.get(CalculationsService);
-    app.numberOfCalculations = 0;
-    const startValue = app.numberOfCalculations;
-    fixture.detectChanges();
-    app.factorial('3');
-    expect(app.numberOfCalculations).toEqual(startValue + 1);
-  });
 
   it('test factorial using spyOn callFake and callThrough', () => {
     const fixture = TestBed.createComponent(AppComponent);
@@ -114,4 +104,5 @@ describe('AppComponent', () => {
      spyOnProperty(app, "fib", "get").and.returnValue(100);
      expect(app.fib).toEqual(100);
   });
+
 });
